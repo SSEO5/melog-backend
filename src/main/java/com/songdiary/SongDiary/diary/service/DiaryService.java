@@ -11,7 +11,6 @@ public interface DiaryService {
     Long writeDiary(Diary diary);
     void deleteDiary(Long diaryId);
     void updateDiary(Long diaryId, DiaryRequestDTO req);
-    List<DiaryResponseDTO> findAllDiaries();
     DiaryResponseDTO findDiaryById(Long diaryId);
     List<DiaryResponseDTO> findDiariesByUserAndDate(Long userId, LocalDate diaryDate);
     List<DiaryResponseDTO> findDiariesByUser(Long userId);

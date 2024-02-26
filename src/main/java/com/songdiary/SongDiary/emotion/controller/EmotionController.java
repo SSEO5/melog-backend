@@ -2,6 +2,7 @@ package com.songdiary.SongDiary.emotion.controller;
 
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +15,13 @@ import com.songdiary.SongDiary.user.dto.UserSessionDTO;
 
 @RestController
 @CrossOrigin(origins="http://localhost:3000")
+@RequiredArgsConstructor
 @RequestMapping("/{diaryId}/emotion")
 public class EmotionController {
 
   private final EmotionService emotionService;
 
-  @Autowired
-  public EmotionController(EmotionService emotionService) {
-    this.emotionService = emotionService;
-  }
-
-  @PostMapping()
+  @PostMapping("")
   public ResponseEntity<?> createEmotion(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable("diaryId") Long diaryId, @RequestBody EmotionDTO req) {
     if (user == null || user.getUserId() == null) {
       return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
@@ -43,7 +40,7 @@ public class EmotionController {
     }
   }
 
-  @GetMapping()
+  @GetMapping("")
   public ResponseEntity<?> findEmotion(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable("diaryId") Long diaryId) {
     if (user == null || user.getUserId() == null) {
       return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
@@ -57,7 +54,7 @@ public class EmotionController {
     }
   }
 
-  @DeleteMapping()
+  @DeleteMapping("")
   public ResponseEntity<?> deleteEmotion(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable("diaryId") Long diaryId) {
     if (user == null || user.getUserId() == null) {
       return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
@@ -70,6 +67,18 @@ public class EmotionController {
     }
   }
   
-
+  //감정 분석
+  @PostMapping("/analyze")
+  public ResponseEntity<?> textAnalyze(@SessionAttribute(name="user", required=false) UserSessionDTO user, @RequestBody String contents){
+    if (user == null || user.getUserId() == null) {
+      return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
+    }
+    try {
+      Optional<EmotionDTO> emotion =  emotionService.analyzeEmotion(contents);
+      return ResponseEntity.ok(emotion.get());
+    } catch (Exception e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
   
 }

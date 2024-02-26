@@ -8,5 +8,5 @@ public interface EmotionService {
   void createEmotion(Long diaryId, EmotionDTO req);
   void deleteEmotion(Long diaryId);
   Optional<EmotionDTO> findEmotionByDiaryId(Long diaryId);
-  
+  Optional<EmotionDTO> analyzeEmotion(String contents);
 }

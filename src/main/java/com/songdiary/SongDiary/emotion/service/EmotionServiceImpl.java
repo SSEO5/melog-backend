@@ -2,6 +2,13 @@ package com.songdiary.SongDiary.emotion.service;
 
 import java.util.Optional;
 
+import com.songdiary.SongDiary.emotion.dto.InputModel;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.songdiary.SongDiary.diary.domain.Diary;
@@ -11,13 +18,16 @@ import com.songdiary.SongDiary.emotion.dto.EmotionDTO;
 import com.songdiary.SongDiary.emotion.repository.EmotionRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class EmotionServiceImpl implements EmotionService {
 
   private final EmotionRepository emotionRepository;
   private final DiaryRepository diaryRepository;
+  private final RestTemplate restTemplate;
 
   public void createEmotion(Long diaryId, EmotionDTO req) {
     Optional<Diary> diary = diaryRepository.findByDiaryId(diaryId);
@@ -83,5 +93,18 @@ public class EmotionServiceImpl implements EmotionService {
     return Optional.of(res);
 
   }
-  
+
+  @SneakyThrows
+  public Optional<EmotionDTO> analyzeEmotion(String contents) {
+    String url = "http://모델서버/predict";
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    HttpEntity<InputModel> entity = new HttpEntity<>(new InputModel(contents), headers);
+    ResponseEntity<EmotionDTO> response = restTemplate.postForEntity(url, entity, EmotionDTO.class);
+    log.info("Sleep 시작");
+    Thread.sleep(1000);
+    log.info("Sleep 종료");
+    return Optional.ofNullable(response.getBody());
+  }
+
 }

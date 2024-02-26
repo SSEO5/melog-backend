@@ -50,13 +50,6 @@ public class DiaryServiceImpl implements DiaryService {
         });
     }
 
-    public List<DiaryResponseDTO> findAllDiaries(){
-        return diaryRepository.findAll().stream()
-                .sorted(Comparator.comparing(Diary::getDiaryDate).reversed())
-                .map(DiaryResponseDTO::from)
-                .collect(Collectors.toList());
-    }
-
     public DiaryResponseDTO findDiaryById(Long diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new EntityNotFoundException("다이어리가 존재하지 않습니다."));
@@ -70,12 +63,14 @@ public class DiaryServiceImpl implements DiaryService {
             throw new EntityNotFoundException("해당 날짜의 다이어리가 존재하지 않습니다.");
         }
         return diaries.stream()
+                .sorted(Comparator.comparing(Diary::getDiaryDate).reversed())
                 .map(DiaryResponseDTO::from)
                 .collect(Collectors.toList());
     }
 
     public List<DiaryResponseDTO> findDiariesByUser(Long diaryWriterId) {
        return diaryRepository.findByDiaryWriterId(diaryWriterId).stream()
+               .sorted(Comparator.comparing(Diary::getDiaryDate).reversed())
                .map(DiaryResponseDTO::from)
                .collect(Collectors.toList());
     }
