@@ -1,6 +1,7 @@
 package com.songdiary.SongDiary.diary.service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,6 +52,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     public List<DiaryResponseDTO> findAllDiaries(){
         return diaryRepository.findAll().stream()
+                .sorted(Comparator.comparing(Diary::getDiaryDate).reversed())
                 .map(DiaryResponseDTO::from)
                 .collect(Collectors.toList());
     }
