@@ -13,7 +13,7 @@ import com.songdiary.SongDiary.user.dto.UserSessionDTO;
 
 
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(origins="http://localhost:3000")
 @RequestMapping("/{diaryId}/emotion")
 public class EmotionController {
 
@@ -25,7 +25,7 @@ public class EmotionController {
   }
 
   @PostMapping()
-  public ResponseEntity<?> createEmotion(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable Long diaryId, @RequestBody EmotionDTO req) {
+  public ResponseEntity<?> createEmotion(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable("diaryId") Long diaryId, @RequestBody EmotionDTO req) {
     if (user == null || user.getUserId() == null) {
       return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
     }
@@ -44,7 +44,7 @@ public class EmotionController {
   }
 
   @GetMapping()
-  public ResponseEntity<?> findEmotion(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable Long diaryId) {
+  public ResponseEntity<?> findEmotion(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable("diaryId") Long diaryId) {
     if (user == null || user.getUserId() == null) {
       return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
     }
@@ -58,7 +58,7 @@ public class EmotionController {
   }
 
   @DeleteMapping()
-  public ResponseEntity<?> deleteEmotion(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable Long diaryId) {
+  public ResponseEntity<?> deleteEmotion(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable("diaryId") Long diaryId) {
     if (user == null || user.getUserId() == null) {
       return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
     }

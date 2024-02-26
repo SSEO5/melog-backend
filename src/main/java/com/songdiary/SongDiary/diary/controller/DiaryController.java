@@ -18,7 +18,7 @@ import com.songdiary.SongDiary.diary.service.DiaryService;
 import com.songdiary.SongDiary.user.dto.UserSessionDTO;
 
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class DiaryController {
   
@@ -85,7 +85,7 @@ public class DiaryController {
     }
   }
   @GetMapping("/diary/{diaryId}")
-  public ResponseEntity<?> getDiary(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable Long diaryId){
+  public ResponseEntity<?> getDiary(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable("diaryId") Long diaryId){
     if (user == null) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인 후 이용해주세요.");
     }
@@ -97,7 +97,7 @@ public class DiaryController {
     }
   }
   @DeleteMapping("/diary/{diaryId}")
-  public ResponseEntity<?> deleteDiary(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable Long diaryId){
+  public ResponseEntity<?> deleteDiary(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable("diaryId") Long diaryId){
     if (user == null) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인 후 이용해주세요.");
     }
@@ -110,7 +110,7 @@ public class DiaryController {
   }
 
   @PutMapping("/diary/{diaryId}")
-  public ResponseEntity<?> updateDiary(@PathVariable Long diaryId, @RequestBody DiaryRequestDTO req){
+  public ResponseEntity<?> updateDiary(@PathVariable("diaryId") Long diaryId, @RequestBody DiaryRequestDTO req){
 
     try {
       diaryService.updateDiary(diaryId, req);

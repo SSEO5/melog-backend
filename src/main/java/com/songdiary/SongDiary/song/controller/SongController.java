@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(origins="http://localhost:3000")
 @RequiredArgsConstructor
 @RequestMapping("/{diaryId}/song")
 public class SongController {
@@ -23,7 +23,7 @@ public class SongController {
     private final DiaryService diaryService;
 
     @PostMapping()
-    public ResponseEntity<?> createSong(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable Long diaryId, @RequestBody List<SongDTO> reqs){
+    public ResponseEntity<?> createSong(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable("diaryId") Long diaryId, @RequestBody List<SongDTO> reqs){
         if (user == null || user.getUserId() == null) {
             return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
         }
@@ -35,7 +35,7 @@ public class SongController {
         }
     }
     @GetMapping()
-    public ResponseEntity<?> findEmotion(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable Long diaryId) {
+    public ResponseEntity<?> findEmotion(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable("diaryId") Long diaryId) {
         if (user == null || user.getUserId() == null) {
             return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
         }
@@ -48,7 +48,7 @@ public class SongController {
         }
     }
     @DeleteMapping()
-    public ResponseEntity<?> deleteSong(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable Long diaryId) {
+    public ResponseEntity<?> deleteSong(@SessionAttribute(name="user", required=false) UserSessionDTO user, @PathVariable("diaryId") Long diaryId) {
         if (user == null || user.getUserId() == null) {
             return new ResponseEntity<>("로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
         }
