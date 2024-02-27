@@ -1,7 +1,6 @@
 package com.songdiary.SongDiary.diary.repository;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,5 +15,5 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<Diary> findByDiaryId(Long diaryId);
     List<Diary> findByDiaryDateAndDiaryWriterId(LocalDate diaryDate, Long diaryWriterId);
     List<Diary> findByDiaryWriterId(Long diaryWriterId);
-    List<Diary> findByDiaryDateBetweenAndDiaryWriterIdOrderByDiaryDateAsc(LocalDate startDate, LocalDate endDate, Long diaryWriterId);
+    List<Diary> findByDiaryDateBetweenAndDiaryWriterId(LocalDate startDate, LocalDate endDate, Long diaryWriterId);
 }

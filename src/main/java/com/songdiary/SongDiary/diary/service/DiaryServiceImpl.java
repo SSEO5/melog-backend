@@ -2,10 +2,7 @@ package com.songdiary.SongDiary.diary.service;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.songdiary.SongDiary.diary.dto.DateResponseDTO;
@@ -82,16 +79,19 @@ public class DiaryServiceImpl implements DiaryService {
         LocalDate startDate = diaryDate.atDay(1);
         LocalDate endDate = diaryDate.atEndOfMonth();
 
-        List<Diary> diaries = diaryRepository.findByDiaryDateBetweenAndDiaryWriterIdOrderByDiaryDateAsc(startDate, endDate, diaryWriterId);
+        List<Diary> diaries = diaryRepository.findByDiaryDateBetweenAndDiaryWriterId(startDate, endDate, diaryWriterId);
         if (diaries == null || diaries.isEmpty()) {
             throw new EntityNotFoundException("해당 날짜의 다이어리가 존재하지 않습니다.");
         }
         List<DateResponseDTO> res = new ArrayList<>();
+        Set<LocalDate> seenDates = new LinkedHashSet<>(); //for situation where there are more than one diary on the same date
         for(Diary diary : diaries){
-            DateResponseDTO tmp = new DateResponseDTO();
-            tmp.setDate(diary.getDiaryDate());
-            tmp.setMostEmotion(diary.getMostEmotion());
-            res.add(tmp);
+            if(seenDates.add(diary.getDiaryDate())){
+                DateResponseDTO tmp = new DateResponseDTO();
+                tmp.setDate(diary.getDiaryDate());
+                tmp.setMostEmotion(diary.getMostEmotion());
+                res.add(tmp);
+            }
         }
         return res;
     }
