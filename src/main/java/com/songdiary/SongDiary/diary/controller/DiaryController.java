@@ -1,9 +1,11 @@
 package com.songdiary.SongDiary.diary.controller;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 import com.songdiary.SongDiary.diary.dto.DateRequestDTO;
+import com.songdiary.SongDiary.diary.dto.DateResponseDTO;
 import com.songdiary.SongDiary.diary.dto.DiaryResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -59,14 +61,14 @@ public class DiaryController {
     }
   }
   @GetMapping("/diary/emotion")
-  public ResponseEntity<?> getEmotionByDate(@SessionAttribute(name="user", required=false) UserSessionDTO user, @RequestParam(name="date", required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+  public ResponseEntity<?> getEmotionByDate(@SessionAttribute(name="user", required=false) UserSessionDTO user, @RequestParam(name="date", required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) YearMonth date){
     if (user == null) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인 후 이용해주세요.");
     }
 
-    LocalDate diaryDate = (date == null)?LocalDate.now():date;
+    YearMonth diaryDate = (date == null)? YearMonth.from(LocalDate.now()):date;
     try {
-      String res = diaryService.findEmotionByDate(user.getUserId(), diaryDate);
+      List<DateResponseDTO> res = diaryService.findEmotionByDate(user.getUserId(), diaryDate);
       return ResponseEntity.ok(res);
     } catch (Exception e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -1,11 +1,14 @@
 package com.songdiary.SongDiary.diary.service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.songdiary.SongDiary.diary.dto.DateResponseDTO;
 import com.songdiary.SongDiary.diary.dto.DiaryRequestDTO;
 import com.songdiary.SongDiary.diary.dto.DiaryResponseDTO;
 import com.songdiary.SongDiary.emotion.service.EmotionService;
@@ -75,13 +78,22 @@ public class DiaryServiceImpl implements DiaryService {
                .collect(Collectors.toList());
     }
 
-    public String findEmotionByDate(Long diaryWriterId, LocalDate diaryDate){
-        List<Diary> diaries = diaryRepository.findByDiaryDateAndDiaryWriterId(diaryDate, diaryWriterId);
+    public List<DateResponseDTO> findEmotionByDate(Long diaryWriterId, YearMonth diaryDate){
+        LocalDate startDate = diaryDate.atDay(1);
+        LocalDate endDate = diaryDate.atEndOfMonth();
+
+        List<Diary> diaries = diaryRepository.findByDiaryDateBetweenAndDiaryWriterIdOrderByDiaryDateAsc(startDate, endDate, diaryWriterId);
         if (diaries == null || diaries.isEmpty()) {
             throw new EntityNotFoundException("해당 날짜의 다이어리가 존재하지 않습니다.");
         }
-        Diary diary = diaries.get(0);
-        return diary.getMostEmotion();
+        List<DateResponseDTO> res = new ArrayList<>();
+        for(Diary diary : diaries){
+            DateResponseDTO tmp = new DateResponseDTO();
+            tmp.setDate(diary.getDiaryDate());
+            tmp.setMostEmotion(diary.getMostEmotion());
+            res.add(tmp);
+        }
+        return res;
     }
 
 }

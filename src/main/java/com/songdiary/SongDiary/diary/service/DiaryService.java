@@ -1,9 +1,11 @@
 package com.songdiary.SongDiary.diary.service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 import com.songdiary.SongDiary.diary.domain.Diary;
+import com.songdiary.SongDiary.diary.dto.DateResponseDTO;
 import com.songdiary.SongDiary.diary.dto.DiaryRequestDTO;
 import com.songdiary.SongDiary.diary.dto.DiaryResponseDTO;
 
@@ -14,5 +16,5 @@ public interface DiaryService {
     DiaryResponseDTO findDiaryById(Long diaryId);
     List<DiaryResponseDTO> findDiariesByUserAndDate(Long userId, LocalDate diaryDate);
     List<DiaryResponseDTO> findDiariesByUser(Long userId);
-    String findEmotionByDate(Long userId, LocalDate diaryDate);
+    List<DateResponseDTO> findEmotionByDate(Long userId, YearMonth diaryDate);
 }

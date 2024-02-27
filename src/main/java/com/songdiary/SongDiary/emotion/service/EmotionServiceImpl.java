@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.songdiary.SongDiary.emotion.dto.InputModel;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,12 +23,16 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class EmotionServiceImpl implements EmotionService {
 
   private final EmotionRepository emotionRepository;
   private final DiaryRepository diaryRepository;
   private final RestTemplate restTemplate;
+  public EmotionServiceImpl(EmotionRepository emotionRepository, DiaryRepository diaryRepository, RestTemplate restTemplate) {
+    this.emotionRepository = emotionRepository;
+    this.diaryRepository = diaryRepository;
+    this.restTemplate = restTemplate;
+  } //for restTemplate
 
   public void createEmotion(Long diaryId, EmotionDTO req) {
     Optional<Diary> diary = diaryRepository.findByDiaryId(diaryId);
